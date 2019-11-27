@@ -1,23 +1,36 @@
 class Node
+    attr_accessor :value, :left, :right
 
-    def initialize
+    def initialize(val, l = nil, r = nil)
+        @value = val
+        @left = l
+        @right = r
 
     end
 
-    def compare
+    def greater?(n)
         # compares the values of this node to another node
+        return @value > n.value ? true : false
     end
 
 end
 
 class Tree
+    attr_reader :root
 
-    def initialize
-        
+    def initialize(arr)
+        #accepts array and passes it to the tree builder function
+        @root = build_tree(arr)
+
     end
 
-    def build_tree
-        # accepts array and builds the tree at initialization
+    def build_tree(arr)
+        # accepts array and builds the tree, returns the root node
+
+        #sort array
+        #root = middle value
+        #
+
 
     end
 
@@ -66,3 +79,7 @@ class Tree
 
     end
 end
+
+n1 = Node.new(4)
+n2 = Node.new(8)
+puts n2.greater?(n1)
