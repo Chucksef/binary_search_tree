@@ -19,14 +19,14 @@ class Tree
     end
 
     def build_tree(arr)
-        # accepts an array to set the root, passes sub-arrays to the subtree function
+        # accepts an array to set the root, passes sub-arrays to the build_subtree function
         n = Node.new(arr[midex(arr)])
-        n.left = subtree(arr[0 .. midex(arr)-1])
-        n.right = subtree(arr[midex(arr)+1 .. -1])
+        n.left = build_subtree(arr[0 .. midex(arr)-1])
+        n.right = build_subtree(arr[midex(arr)+1 .. -1])
         return n
     end
 
-    def subtree(arr)
+    def build_subtree(arr)
         # accepts an array and builds the rest of the tree recursively
 
         #base case
@@ -34,8 +34,8 @@ class Tree
         return n if arr.length <= 1
 
         #recursive case
-        n.left = subtree(arr[0 .. midex(arr)-1])
-        n.right = subtree(arr[midex(arr)+1 .. -1]) if arr[midex(arr)+1 .. -1].length > 0
+        n.left = build_subtree(arr[0 .. midex(arr)-1])
+        n.right = build_subtree(arr[midex(arr)+1 .. -1]) if arr[midex(arr)+1 .. -1].length > 0
         return n
 
     end
@@ -130,23 +130,47 @@ class Tree
 
     def breadth_first
         # traverses the tree in breadth first order, -- block
+        queue = []
+        queue << @root
 
-    end
-
-    def in_order
-        # Depth first traversal in L-D-R order -- block
-
+        while queue.length > 0
+            n = queue[0]
+            queue << n.left if n.left
+            queue << n.right if n.right
+            yield(n)
+            queue.shift
+        end
     end
 
     def pre_order
         # Depth first traversal in D-L-R order -- block
+        stack = []
+        stack << @root
 
+        while stack.length > 0
+            n = stack[stack.length-1]
+            yield(n)
+            stack.pop
+            stack << n.right if n.right
+            stack << n.left if n.left
+        end
     end
-
-    def post_order
+    
+    def post_order(n = @root)
         # Depth first traversal in L-R-D order -- block
-
+        return if n == nil
+        post_order(n.left) {|node| yield node} if n.left
+        post_order(n.right) {|node| yield node} if n.right
+        yield(n)
     end
+    
+    def in_order(n = @root)
+        # Depth first traversal in L-D-R order -- block
+        return if n == nil
+        in_order(n.left) {|node| yield node} if n.left
+        yield(n)
+        in_order(n.right) {|node| yield node} if n.right
+    end    
 
     def balanced?
         # returns true if the tree is balanced
@@ -197,4 +221,21 @@ lost.insert(5)
 
 lost.delete(8)
 
-puts lost.find(42).value
+bf_string = []
+pre_string = []
+post_string = []
+io_string = []
+
+lost.breadth_first { |n| bf_string << n.value }
+lost.pre_order { |n| pre_string << n.value }
+lost.post_order { |n| post_string << n.value }
+lost.in_order { |n| io_string << n.value }
+
+puts "breadth-first: #{bf_string}"
+puts "pre_order: #{pre_string}"
+puts "post_order: #{post_string}"
+puts "in_order: #{io_string}"
+
+# pre-order     16, 12, 9, 4, 3, 5, 11, 10, 15, 42, 31, 23, 108
+# post-order    3, 5, 4, 10, 11, 9, 15, 12, 23, 31, 108, 42, 16
+# in-order      3, 4, 5, 9, 10, 11, 12, 15, 16, 23, 31, 42, 108
