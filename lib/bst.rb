@@ -103,28 +103,48 @@ class Tree
         end
     end
 
-    def find
+    def find(val)
         # searches the tree for a value and returns a node if found
+        
+        current_node = @root
 
+        while current_node
+            comparison = val <=> current_node.value
+            if comparison >= 1
+                if current_node.right 
+                    return current_node.right if current_node.right.value == val
+                    current_node = current_node.right
+                else
+                    puts "ERROR: No node of that value to delete"
+                end
+            else
+                if current_node.left 
+                    return current_node.left if current_node.left.value == val
+                    current_node = current_node.left
+                else
+                    puts "ERROR: No node of that value to delete"
+                end
+            end
+        end
     end
 
     def breadth_first
-        # traverses the tree in breadth first order, accepting a block
+        # traverses the tree in breadth first order, -- block
 
     end
 
     def in_order
-        # Depth first traversal in L-D-R order
+        # Depth first traversal in L-D-R order -- block
 
     end
 
     def pre_order
-        # Depth first traversal in D-L-R order
+        # Depth first traversal in D-L-R order -- block
 
     end
 
     def post_order
-        # Depth first traversal in L-R-D order
+        # Depth first traversal in L-R-D order -- block
 
     end
 
@@ -176,3 +196,5 @@ lost.insert(3)
 lost.insert(5)
 
 lost.delete(8)
+
+puts lost.find(42).value
