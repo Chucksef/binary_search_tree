@@ -142,18 +142,12 @@ class Tree
         end
     end
 
-    def pre_order
+    def pre_order(n = @root)
         # Depth first traversal in D-L-R order -- block
-        stack = []
-        stack << @root
-
-        while stack.length > 0
-            n = stack[stack.length-1]
-            yield(n)
-            stack.pop
-            stack << n.right if n.right
-            stack << n.left if n.left
-        end
+        return if n == nil
+        yield(n)
+        pre_order(n.left) {|node| yield node} if n.left
+        pre_order(n.right) {|node| yield node} if n.right
     end
     
     def post_order(n = @root)
@@ -174,6 +168,8 @@ class Tree
 
     def balanced?
         # returns true if the tree is balanced
+
+
 
     end
 
