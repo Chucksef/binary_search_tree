@@ -128,18 +128,11 @@ class Tree
         end
     end
 
-    def breadth_first
+    def breadth(n = @root)
         # traverses the tree in breadth first order, -- block
-        queue = []
-        queue << @root
-
-        while queue.length > 0
-            n = queue[0]
-            queue << n.left if n.left
-            queue << n.right if n.right
-            yield(n)
-            queue.shift
-        end
+        return if n = nil
+        yield(n)
+        breadth(breadth(n.left).left) if n.left.left 
     end
 
     def pre_order(n = @root)
@@ -222,7 +215,7 @@ pre_string = []
 post_string = []
 io_string = []
 
-lost.breadth_first { |n| bf_string << n.value }
+lost.breadth { |n| bf_string << n.value }
 lost.pre_order { |n| pre_string << n.value }
 lost.post_order { |n| post_string << n.value }
 lost.in_order { |n| io_string << n.value }
